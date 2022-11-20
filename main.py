@@ -23,9 +23,10 @@ class Item(BaseModel):
     class Config:
         orm_mode = True
 @app.post("/forecast_future")
-async def return_forecast(item: Item) :
+async def return_forecast(req:Item) :
     new_results = sm.load('model/myPredict.pickle')
-    goal_time= datetime.strptime(Item.days, '%Y-%m-%d')
+    print(req.days)
+    goal_time= datetime.strptime(req.days, '%Y-%m-%d')
     diff = goal_time-datetime.now()
 
 
