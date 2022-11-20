@@ -3,6 +3,7 @@ import statsmodels.api as sm
 from datetime import datetime
 from fastapi import FastAPI
 import uvicorn
+from pydantic import BaseModel
 
 app = FastAPI()
 
@@ -16,8 +17,13 @@ async def root():
 def healthcheck():
     return {"status": "ok"}
 
+class Item(BaseModel):
+    days: str
+
+    class Config:
+        orm_mode = True
 @app.post("/forecast_future")
-async def return_forecast(days: str) :
+async def return_forecast(item: Item) :
     new_results = sm.load('model/myPredict.pickle')
     goal_time= datetime.strptime(days, '%Y-%m-%d')
     diff = goal_time-datetime.now()
